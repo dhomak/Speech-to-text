@@ -18,11 +18,11 @@ from google.cloud import storage
 
 # %%
 def mp3_to_wav(audio_file_name):
-    if audio_file_name.split('.')[1] == 'mp3':    
-        sound = AudioSegment.from_mp3(audio_file_name)
+    if audio_file_name.endswith('mp3'):
+        sound = AudioSegment.from_mp3(filepath + audio_file_name)
         audio_file_name = audio_file_name.split('.')[0] + '.wav'
-        sound.export(audio_file_name, format="wav")
-
+        res = sound.export(filepath + audio_file_name, format="wav")
+        res.close()
 
 # %%
 def frame_rate_channel(audio_file_name):
@@ -114,9 +114,11 @@ def write_transcripts(transcript_filename,transcript):
 # %%
 if __name__ == "__main__":
     for audio_file_name in os.listdir(filepath):
-        transcript = google_transcribe(audio_file_name)
-        transcript_filename = audio_file_name.split('.')[0] + '.txt'
-        write_transcripts(transcript_filename,transcript)
-
+        if audio_file_name.endswith('.wav'):
+            transcript = google_transcribe(audio_file_name)
+            transcript_filename = audio_file_name.split('.')[0] + '.txt'
+            write_transcripts(transcript_filename, transcript)
+        elif audio_file_name.endswith('.mp3'):
+            mp3_to_wav(audio_file_name)
 
 # %%

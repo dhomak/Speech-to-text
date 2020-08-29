@@ -13,8 +13,7 @@ def mp3_to_wav(audio_file_name):
         sound = AudioSegment.from_mp3(audio_file_name)  
         audio_file_name = audio_file_name.split('.')[0] + '_.wav'
         sound.export(audio_file_name, format="wav")
-      # print("mp3 to wav step:")
-      # print(audio_file_name)
+      
 
 
 def frame_rate_channel(audio_file_name):
@@ -39,12 +38,8 @@ def audio_convert(audio_file_name):
 
     frame_rate,channels = frame_rate_channel(file_name)
 
-    config = types.RecognitionConfig(
-    encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
-    sample_rate_hertz=frame_rate,
-    language_code='ru-RU')
+
 
 if __name__ == "__main__":
-    print(frame_rate,channels)
     for audio_file_name in os.listdir(filepath):
         transcript = audio_convert(audio_file_name)

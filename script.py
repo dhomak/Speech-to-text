@@ -1,11 +1,6 @@
 # To add a new cell, type '# %%'
 # To add a new markdown cell, type '# %% [markdown]'
 # %%
-filepath = "/home/aalien/audio/"
-output_filepath = "/home/aalien/Transcripts/"
-
-
-# %%
 from pydub import AudioSegment
 import io
 import os
@@ -14,6 +9,9 @@ from google.cloud.speech import enums
 from google.cloud.speech import types
 import wave
 from google.cloud import storage
+
+filepath = "/home/aalien/audio/"
+output_filepath = "/home/aalien/Transcripts/"
 
 
 # %%
@@ -111,14 +109,23 @@ def write_transcripts(transcript_filename,transcript):
     f.close() 
 
 
+
 # %%
 if __name__ == "__main__":
     for audio_file_name in os.listdir(filepath):
-        if audio_file_name.endswith('.wav'):
+        if audio_file_name.endswith('.mp3'):
+            mp3_to_wav(audio_file_name)
+            print("Converting MP3 to WAV...done")
+            audio_file_name=audio_file_name.split('.')[0] + '.wav'
             transcript = google_transcribe(audio_file_name)
             transcript_filename = audio_file_name.split('.')[0] + '.txt'
+            print("Transcribed, writing to " + transcript_filename)
             write_transcripts(transcript_filename, transcript)
-        elif audio_file_name.endswith('.mp3'):
-            mp3_to_wav(audio_file_name)
+        elif audio_file_name.endswith('.wav'):
+            print("Using WAV file without conversion...done")
+            transcript = google_transcribe(audio_file_name)
+            transcript_filename = audio_file_name.split('.')[0] + '.txt'
+            print("Transcribed, writing to " + transcript_filename)
+            write_transcripts(transcript_filename, transcript)
 
 # %%
